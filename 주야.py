@@ -3,18 +3,20 @@ import pandas as pd
 import numpy as np
 
 filename = "train.txt"
-data = pd.read_csv('./data/'+filename)
+data = pd.read_csv('./data/'+filename, encoding='euc-kr')
 
-for day in list(set(data['요일'].values)):
-    temp = data[data['요일']==day]['주야'].value_counts()
-    print(day)
-    print(temp / sum(temp))
+# for day in list(set(data['요일'].values)):
+#     temp = data[data['요일']==day]['주야'].value_counts()
+#     print(day)
+#     print(temp / sum(temp))
 
 
 x_label = ['경상자수', '부상신고자수', '발생지시도', '발생지시군구', '사고유형_대분류', '사고유형_중분류', '법규위반', '도로형태_대분류', '당사자종별_2당_대분류']
 x_label = ['발생년','요일', '사망자수', '사상자수', '중상자수', '경상자수','부상신고자수', '발생지시도', '발생지시군구', '사고유형_대분류', '사고유형_중분류', '사고유형', '법규위반_대분류','법규위반', '도로형태_대분류', '도로형태', '당사자종별_1당_대분류', '당사자종별_2당_대분류']
 x_label = ['요일', '사망자수', '사상자수', '중상자수', '경상자수', '부상신고자수', '발생지시도', '발생지시군구', '사고유형_대분류', '사고유형_중분류', '법규위반', '도로형태_대분류', '도로형태', '당사자종별_1당_대분류', '당사자종별_2당_대분류']
 y_label = '주야'
+
+data['요일'] = [1 if val=='월' or val=='토' or val=='일' else 0 for val in data['요일']]
 
 #counter
 # from collections import Counter
@@ -78,7 +80,7 @@ plt.show()
 
 #features importances
 for name, importance in zip(x_train.columns, ):
-    print(name, "=", importance)|
+    print(name, "=", importance)
 
 indices = np.argsort(rf.feature_importances_)
 
