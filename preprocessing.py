@@ -14,6 +14,16 @@ def comp(test, train):
                 return False
         else:
             return True
+    if len(t[t==False]) == 4:
+        miss = True
+        for row in test[t==False]:
+            if not str(row)=='nan':
+                if miss == True:
+                    miss = False
+                else:
+                    return False
+        else:
+            return True
     return False
 
 
