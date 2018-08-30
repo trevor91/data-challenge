@@ -5,29 +5,21 @@ import numpy as np
 filename = "train.csv"
 data = pd.read_csv('./data/'+filename, encoding='utf-8')
 
-# for day in list(set(data['요일'].values)):
-#     temp = data[data['요일']==day]['주야'].value_counts()
-#     print(day)
-#     print(temp / sum(temp))
+merge_col = []
+for a,b in data[['주야','요일']].values:
+    merge_col.append(a+b)
+#data = pd.concat([data,pd.DataFrame(merge_col)], axis=1)
 
-
-x_label = ['사고유형_대분류', '사고유형_중분류', '도로형태_대분류', '도로형태', '당사자종별_1당_대분류', '당사자종별_2당_대분류']
+x_label = ['사망자수', '사상자수', '중상자수', '경상자수', '부상신고자수', '발생지시도', '발생지시군구', '사고유형_대분류', '당사자종별_2당_대분류']
 y_label = '법규위반' # '사고유형_중분류'
+x_label = ['사고유형_대분류', '사고유형_중분류', '법규위반', '도로형태_대분류', '도로형태', '당사자종별_1당_대분류', '당사자종별_2당_대분류']
+y_label = '시간'
 
-x_label = ['사고유형_대분류', '사고유형_중분류', '법규위반', '도로형태_대분류', '도로형태', '당사자종별_2당_대분류']
-y_label = '당사자종별_1당_대분류' #'도로형태_대분류'
-
-#counter
-# from collections import Counter
-# for col in x_label:
-#     freq = Counter(data[col])
-#     print(col, freq, '\n')
-
-# for col in x_label:
-#     print(data[col].value_counts(), '\n')
-
+# x_label = ['부상신고자수', '사고유형_대분류', '법규위반','당사자종별_2당_대분류']
+# y_label = '도로형태_대분류' #'당사자종별_1당_대분류'
 
 #categorical -> one hot
+
 x_train = pd.DataFrame()
 for col in x_label:
     if data[col].dtype == 'O':
@@ -51,16 +43,9 @@ y_test = y_train[~train_index]
 x_train = x_train[train_index]
 y_train = y_train[train_index]
 
-
-# str -> number
-# from sklearn.feature_extraction.text import CountVectorizer
-# vec = CountVectorizer()
-# train = vec.fit_transform(data[x_label])
-
-
 #random forest
 from sklearn.ensemble import RandomForestClassifier
-rf = RandomForestClassifier(n_estimators=1000, oob_score= True, random_state=2018, max_features=20)
+rf = RandomForestClassifier(n_estimators=1000, oob_score= True, random_state=2018, max_features=10)
 rf.fit(x_train, y_train)
 
 #acc

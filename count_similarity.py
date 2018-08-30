@@ -29,13 +29,22 @@ class cnt_silmilarity:
         for i, val in enumerate(self.test['당사자종별_2당_대분류']):
             if str(self.test.loc[i,'사고유형_대분류']) == 'nan':
                 self.test.loc[i,'사고유형_대분류'] = self.rule.target_typeOfAccident(val)
+        return None
 
     def rulebase_typeOfObject2(self):
         for i, val in enumerate(self.test['사고유형_대분류']):
             if str(self.test.loc[i,'당사자종별_2당_대분류']) == 'nan':
                 self.test.loc[i,'당사자종별_2당_대분류'] = self.rule.target_typeOfObject2(val)
+        return None
 
+    def remove_columns(self, col): #remove column
+        # columns = list(set(self.train.columns).difference([col]))
+        columns = [val for val in self.train.columns if val != col]
+        self.train = self.train[columns]
+        self.test = self.test[columns]
+        return None
 
+    ##simil
     def other_values_index(self, test_row, train_row):
         is_same = test_row == train_row
         false_index = [i for i, val in enumerate(is_same) if val==False]
